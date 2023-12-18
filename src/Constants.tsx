@@ -1,68 +1,34 @@
-export const SingleConditionCombinatorValue = "NONE";
-export const GroupConditionCombinatorValues = ["AND", "OR"] as const;
-export const IfThenElseConditionCombinatorValue = "IF";
+export const singleConditionOperators = ["NONE"] as const;
+export const groupConditionOperators = ["AND", "OR"] as const;
+export const conditionalOperators = ["IF"] as const;
 
-type SingleConditionCombinatorValuesType =
-  typeof SingleConditionCombinatorValue;
-type GroupConditionCombinatorValuesType =
-  (typeof GroupConditionCombinatorValues)[number];
-type IfThenElseConditionCombinatorValuesType =
-  typeof IfThenElseConditionCombinatorValue;
+type SingleConditionOperatorValues =
+  (typeof singleConditionOperators)[number];
+type GroupConditionOperatorValues =
+  (typeof groupConditionOperators)[number];
+type ConditionalOperatorValues =
+  (typeof conditionalOperators)[number];
 
-type CombinatorValues =
-  | SingleConditionCombinatorValuesType
-  | GroupConditionCombinatorValuesType
-  | IfThenElseConditionCombinatorValuesType;
+type OperatorValues =
+  | SingleConditionOperatorValues
+  | GroupConditionOperatorValues
+  | ConditionalOperatorValues;
 
-export type Combinator = {
+export type Operator = {
   id: number;
-  value: CombinatorValues;
+  value: OperatorValues;
   name: string;
 };
 
-export type SingleConditionCombinator = {
+export type Condition = { id: number; name: string };
+
+export type Evaluator = {
   id: number;
-  value: SingleConditionCombinatorValuesType;
-  name: string;
+  operator: OperatorValues;
+  condition?: Condition | undefined;
+  subNodes?: Evaluator[];
+  evaluation?: Evaluator;
+  conditionalSubNodes?: Evaluator[];
 };
-
-export type GroupConditionCombinator = {
-  id: number;
-  value: GroupConditionCombinatorValuesType;
-  name: string;
-};
-
-export type IfThenElseConditionCombinator = {
-  id: number;
-  value: IfThenElseConditionCombinatorValuesType;
-  name: string;
-};
-
-export type Condition = { id: number; name?: string };
-
-export type SingleConditionQuery = {
-  id: number;
-  combinator: SingleConditionCombinatorValuesType;
-  condition: Condition | undefined;
-};
-
-export type GroupConditionQuery = {
-  id: number;
-  combinator: GroupConditionCombinatorValuesType;
-  conditions: Query[];
-};
-
-export type IfThenElseConditionQuery = {
-  id: number;
-  combinator: IfThenElseConditionCombinatorValuesType;
-  ifCondition: Query;
-  thenCondition: Query;
-  elseCondition: Query;
-};
-
-export type Query =
-  | SingleConditionQuery
-  | GroupConditionQuery
-  | IfThenElseConditionQuery;
 
 export type Path = (string | [string, number])[];

@@ -2,96 +2,85 @@ import { useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import Evaluate from "./Evaluate";
 import {
-  GroupConditionCombinator,
-  IfThenElseConditionCombinator,
-  Combinator,
+  Operator,
   Condition,
-  Query,
+  Evaluator,
   Path,
-  GroupConditionCombinatorValues,
-  IfThenElseConditionCombinatorValue,
-  SingleConditionQuery,
-  GroupConditionQuery,
-  IfThenElseConditionQuery,
+  groupConditionOperators,
+  conditionalOperators,
 } from "./Constants";
 
 function ConditionEvaluationSection() {
-  const initialQuery: Query = {
+  const initialEvaluator: Evaluator = {
     id: 1,
-    combinator: "AND",
-    conditions: [
+    operator: "AND",
+    subNodes: [
       {
         id: 2,
-        combinator: "NONE",
-        condition: { id: -1 },
+        operator: "NONE",
+        condition: undefined,
       },
       {
         id: 3,
-        combinator: "AND",
-        conditions: [
+        operator: "AND",
+        subNodes: [
           {
             id: 4,
-            combinator: "NONE",
-            condition: { id: -1 },
+            operator: "NONE",
+            condition: undefined,
           },
         ],
       },
       {
         id: 5,
-        combinator: "NONE",
+        operator: "NONE",
         condition: undefined,
       },
       {
         id: 6,
-        combinator: "AND",
-        conditions: [
+        operator: "AND",
+        subNodes: [
           {
             id: 7,
-            combinator: "NONE",
+            operator: "NONE",
             condition: undefined,
           },
         ],
       },
       {
         id: 8,
-        combinator: "IF",
-        ifCondition: {
+        operator: "IF",
+        evaluation: {
           id: 9,
-          combinator: "AND",
-          conditions: [
+          operator: "AND",
+          subNodes: [
             {
               id: 10,
-              combinator: "NONE",
+              operator: "NONE",
               condition: undefined,
             },
           ],
         },
-        thenCondition: {
+        conditionalSubNodes: [{
           id: 12,
-          combinator: "NONE",
-          condition: { id: -1 },
-        },
-        elseCondition: {
+          operator: "NONE",
+          condition: undefined,
+        }],
+        subNodes: [{
           id: 13,
-          combinator: "NONE",
-          condition: { id: -1 },
-        },
+          operator: "NONE",
+          condition: undefined,
+        }],
       },
     ],
   };
+  
+  const [evaluator, setEvaluator] = useState<Evaluator>(initialEvaluator);
 
-  const groupConditionCombinators: GroupConditionCombinator[] = [
+  const operators: Operator[] = [
     { id: 1, value: "AND", name: "and" },
     { id: 2, value: "OR", name: "or" },
-  ];
-
-  const ifThenElseConditionCombinators: IfThenElseConditionCombinator[] = [
     { id: 3, value: "IF", name: "if then else" },
-  ];
-
-  const combinators: Combinator[] = [
-    ...groupConditionCombinators,
-    ...ifThenElseConditionCombinators,
   ];
 
   const conditions: Condition[] = [
@@ -102,24 +91,24 @@ function ConditionEvaluationSection() {
     { id: 5, name: "Same country" },
   ];
 
-  const [query, setQuery] = useState<Query>(initialQuery);
-
-  function isGroupConditionQuery(query: Query): query is GroupConditionQuery {
+  function isGroupConditionEvaluator(evaluator: Evaluator) {
     return (
-      GroupConditionCombinatorValues.find(
-        (value) => value === query.combinator
+      groupConditionOperators.find(
+        (value) => value === evaluator.operator
       ) !== undefined
     );
   }
 
-  function isIfThenElseConditionQuery(
-    query: Query
-  ): query is IfThenElseConditionQuery {
-    return query.combinator === IfThenElseConditionCombinatorValue;
+  function isConditionalEvaluator(evaluator: Evaluator) {
+    return (
+      conditionalOperators.find(
+        (value) => value === evaluator.operator
+      ) !== undefined
+    );
   }
 
-  function deleteNestedQuery(path: Path) {
-    let current = query;
+  const deleteByPath = (path: Path) => {
+    let current = evaluator;
     for (let i = 0; i < path.length - 1; i++) {
       if (current && typeof current === "object") {
         const ele = path[i];
@@ -131,15 +120,15 @@ function ConditionEvaluationSection() {
         } else {
           key = ele;
         }
-        if (isGroupConditionQuery(current) && index !== -1) {
-          current = current.conditions[index];
-        } else if (isIfThenElseConditionQuery(current)) {
-          if (key === "ifCondition") {
-            current = current.ifCondition;
-          } else if (key === "thenCondition") {
-            current = current.thenCondition;
-          } else if (key === "elseCondition") {
-            current = current.elseCondition;
+        if (isGroupConditionEvaluator(current) && index !== -1 && current.subNodes?.[index]) {
+          current = current.subNodes[index];
+        } else if (isConditionalEvaluator(current)) {
+          if (key === "evaluation" && current.evaluation) {
+            current = current.evaluation;
+          } else if (key === "conditionalSubNodes" && current.conditionalSubNodes?.[0]) {
+            current = current.conditionalSubNodes[0];
+          } else if (key === "subNodes" && current.subNodes?.[0]) {
+            current = current.subNodes[0];
           }
         }
       }
@@ -155,27 +144,27 @@ function ConditionEvaluationSection() {
       } else {
         key = lastKey;
       }
-      if (isGroupConditionQuery(current) && index !== -1) {
-        const updatedConditions = [...current.conditions];
+      if (isGroupConditionEvaluator(current) && index !== -1 && current.subNodes) {
+        const updatedConditions = [...current.subNodes];
         updatedConditions.splice(index, 1);
-        current.conditions = updatedConditions;
-      } else if (isIfThenElseConditionQuery(current)) {
-        const singleConditionEvaluate: SingleConditionQuery = {
+        current.subNodes = updatedConditions;
+      } else if (isConditionalEvaluator(current)) {
+        const singleConditionEvaluate: Evaluator = {
           id: 10,
-          combinator: "NONE",
+          operator: "NONE",
           condition: undefined,
         };
-        if (key === "ifCondition") {
-          current.ifCondition = singleConditionEvaluate;
-        } else if (key === "thenCondition") {
-          current.thenCondition = singleConditionEvaluate;
-        } else if (key === "elseCondition") {
-          current.elseCondition = singleConditionEvaluate;
+        if (key === "evaluation") {
+          current.evaluation = singleConditionEvaluate;
+        } else if (key === "conditionalSubNodes" && current.conditionalSubNodes) {
+          current.conditionalSubNodes[0] = singleConditionEvaluate;
+        } else if (key === "subNodes" && current.subNodes) {
+          current.subNodes[0] = singleConditionEvaluate;
         }
       }
     }
 
-    setQuery(query);
+    setEvaluator(evaluator);
   }
 
   return (
@@ -185,13 +174,11 @@ function ConditionEvaluationSection() {
           <Accordion.Header>Condition Evaluation</Accordion.Header>
           <Accordion.Body>
             <Evaluate
-              groupConditionCombinators={groupConditionCombinators}
-              ifThenElseConditionCombinators={ifThenElseConditionCombinators}
-              combinators={combinators}
+              operators={operators}
               conditions={conditions}
-              query={query}
+              evaluator={evaluator}
               path={[]}
-              deleteNestedQuery={deleteNestedQuery}
+              deleteByPath={deleteByPath}
             />
           </Accordion.Body>
         </Accordion.Item>
