@@ -187,10 +187,10 @@ export default function Evaluate({
 
         {isConditionalEvaluator(evaluator) && (
           <Accordion.Collapse eventKey="0">
-            <Card.Body className="p-2 d-flex flex-column gap-3">
+            <Card.Body className="pl-2 pr-5 pt-3 pb-3 d-flex flex-column gap-3">
               {evaluator.evaluation && (
-                <div className="d-flex flex-row align-items-center gap-2">
-                  <p className="m-0" style={{ width: "40px" }}>
+                <div className="d-flex flex-row gap-2">
+                  <p className="m-0 mt-3" style={{ width: "40px" }}>
                     if
                   </p>
                   <Evaluate
