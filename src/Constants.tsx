@@ -9,7 +9,7 @@ type GroupConditionOperatorValues =
 type ConditionalOperatorValues =
   (typeof conditionalOperators)[number];
 
-type OperatorValues =
+export type OperatorValues =
   | SingleConditionOperatorValues
   | GroupConditionOperatorValues
   | ConditionalOperatorValues;

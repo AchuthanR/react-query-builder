@@ -13,6 +13,7 @@ import {
   singleConditionOperators,
   groupConditionOperators,
   conditionalOperators,
+  OperatorValues,
 } from "./Constants";
 
 export default function Evaluate({
@@ -20,13 +21,17 @@ export default function Evaluate({
   conditions,
   evaluator,
   path,
+  addByPath,
   deleteByPath,
+  addParentByPath,
 }: {
   operators: Operator[];
   conditions: Condition[];
   evaluator: Evaluator;
   path: Path;
+  addByPath: (path: Path) => void;
   deleteByPath: (path: Path) => void;
+  addParentByPath: (path: Path, type: OperatorValues) => void;
 }) {
   const [selectedCondition, setSelectedCondition] = useState<
     number | undefined
@@ -83,7 +88,7 @@ export default function Evaluate({
               <Dropdown.Menu>
                 <Dropdown.Header>Add a parent Evaluate</Dropdown.Header>
                 {operators.map((operator) => (
-                  <Dropdown.Item key={operator.id} as="button">
+                  <Dropdown.Item key={operator.id} as="button" onClick={() => addParentByPath(path, operator.value)}>
                     {"Evaluate " + operator.name}
                   </Dropdown.Item>
                 ))}
@@ -104,17 +109,15 @@ export default function Evaluate({
               ))}
             </Form.Select>
 
-            {isGroupConditionEvaluator(evaluator) && <Button variant="outline-success">+</Button>}
+            {isGroupConditionEvaluator(evaluator) && <Button variant="outline-success" onClick={() => addByPath(path)}>+</Button>}
 
             <div className="ml-auto d-flex flex-row align-items-center gap-2">
-              {path.length !== 0 && (
-                <Button
-                  variant="outline-danger"
-                  onClick={() => deleteByPath(path)}
-                >
-                  X
-                </Button>
-              )}
+              <Button
+                variant="outline-danger"
+                onClick={() => deleteByPath(path)}
+              >
+                X
+              </Button>
               <Accordion.Button className="p-2 w-auto bg-transparent shadow-none" />
             </div>
           </Card.Header>
@@ -130,7 +133,7 @@ export default function Evaluate({
               <Dropdown.Menu>
                 <Dropdown.Header>Add a parent Evaluate</Dropdown.Header>
                 {operators.map((operator) => (
-                  <Dropdown.Item key={operator.id} as="button">
+                  <Dropdown.Item key={operator.id} as="button" onClick={() => addParentByPath(path, operator.value)}>
                     {"Evaluate " + operator.name}
                   </Dropdown.Item>
                 ))}
@@ -173,7 +176,9 @@ export default function Evaluate({
                   conditions={conditions}
                   evaluator={subNode}
                   path={[...path, ["subNodes", index]]}
+                  addByPath={addByPath}
                   deleteByPath={deleteByPath}
+                  addParentByPath={addParentByPath}
                 />
               ))}
             </Card.Body>
@@ -193,7 +198,9 @@ export default function Evaluate({
                     conditions={conditions}
                     evaluator={evaluator.evaluation}
                     path={[...path, "evaluation"]}
+                    addByPath={addByPath}
                     deleteByPath={deleteByPath}
+                    addParentByPath={addParentByPath}
                   />
                 </div>
               )}
@@ -207,7 +214,9 @@ export default function Evaluate({
                     conditions={conditions}
                     evaluator={evaluator.conditionalSubNodes[0]}
                     path={[...path, "conditionalSubNodes"]}
+                    addByPath={addByPath}
                     deleteByPath={deleteByPath}
+                    addParentByPath={addParentByPath}
                   />
                 </div>
               )}
@@ -221,7 +230,9 @@ export default function Evaluate({
                     conditions={conditions}
                     evaluator={evaluator.subNodes[0]}
                     path={[...path, "subNodes"]}
+                    addByPath={addByPath}
                     deleteByPath={deleteByPath}
+                    addParentByPath={addParentByPath}
                   />
                 </div>
               )}

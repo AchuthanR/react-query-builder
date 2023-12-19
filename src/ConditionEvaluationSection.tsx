@@ -3,6 +3,7 @@ import Accordion from "react-bootstrap/Accordion";
 import Evaluate from "./Evaluate";
 import {
   Operator,
+  OperatorValues,
   Condition,
   Evaluator,
   Path,
@@ -13,66 +14,8 @@ import {
 function ConditionEvaluationSection() {
   const initialEvaluator: Evaluator = {
     id: 1,
-    operator: "AND",
-    subNodes: [
-      {
-        id: 2,
-        operator: "NONE",
-        condition: undefined,
-      },
-      {
-        id: 3,
-        operator: "AND",
-        subNodes: [
-          {
-            id: 4,
-            operator: "NONE",
-            condition: undefined,
-          },
-        ],
-      },
-      {
-        id: 5,
-        operator: "NONE",
-        condition: undefined,
-      },
-      {
-        id: 6,
-        operator: "AND",
-        subNodes: [
-          {
-            id: 7,
-            operator: "NONE",
-            condition: undefined,
-          },
-        ],
-      },
-      {
-        id: 8,
-        operator: "IF",
-        evaluation: {
-          id: 9,
-          operator: "AND",
-          subNodes: [
-            {
-              id: 10,
-              operator: "NONE",
-              condition: undefined,
-            },
-          ],
-        },
-        conditionalSubNodes: [{
-          id: 12,
-          operator: "NONE",
-          condition: undefined,
-        }],
-        subNodes: [{
-          id: 13,
-          operator: "NONE",
-          condition: undefined,
-        }],
-      },
-    ],
+    operator: "NONE",
+    condition: undefined,
   };
   
   const [evaluator, setEvaluator] = useState<Evaluator>(initialEvaluator);
@@ -107,9 +50,8 @@ function ConditionEvaluationSection() {
     );
   }
 
-  const deleteByPath = (path: Path) => {
-    let current = evaluator;
-    for (let i = 0; i < path.length - 1; i++) {
+  const traverseByPath = (path: Path, current: Evaluator): Evaluator => {
+    for (let i = 0; i < path.length; i++) {
       if (current && typeof current === "object") {
         const ele = path[i];
         let key: string;
@@ -134,37 +76,151 @@ function ConditionEvaluationSection() {
       }
     }
 
-    const lastKey = path[path.length - 1];
-    if (current && typeof current === "object") {
-      let key: string;
-      let index: number = -1;
-      if (Array.isArray(lastKey)) {
-        key = lastKey[0];
-        index = lastKey[1];
-      } else {
-        key = lastKey;
-      }
-      if (isGroupConditionEvaluator(current) && index !== -1 && current.subNodes) {
-        const updatedConditions = [...current.subNodes];
-        updatedConditions.splice(index, 1);
-        current.subNodes = updatedConditions;
-      } else if (isConditionalEvaluator(current)) {
-        const singleConditionEvaluate: Evaluator = {
-          id: 10,
-          operator: "NONE",
-          condition: undefined,
-        };
-        if (key === "evaluation") {
-          current.evaluation = singleConditionEvaluate;
-        } else if (key === "conditionalSubNodes" && current.conditionalSubNodes) {
-          current.conditionalSubNodes[0] = singleConditionEvaluate;
-        } else if (key === "subNodes" && current.subNodes) {
-          current.subNodes[0] = singleConditionEvaluate;
+    return current;
+  }
+
+  const addByPath = (path: Path) => {
+    let newEvaluator = { ...evaluator };
+    let current = traverseByPath(path, newEvaluator);
+    const singleConditionEvaluate: Evaluator = {
+      id: 1,
+      operator: "NONE",
+      condition: undefined,
+    };
+    current.subNodes?.splice(0, 0, singleConditionEvaluate);
+
+    setEvaluator(newEvaluator);
+  }
+
+  const deleteByPath = (path: Path) => {
+    let newEvaluator = { ...evaluator };
+    const singleConditionEvaluate: Evaluator = {
+      id: 1,
+      operator: "NONE",
+      condition: undefined,
+    };
+
+    if (path.length > 0) {
+      let current = traverseByPath(path.slice(0, path.length - 1), newEvaluator);
+
+      const lastKey = path[path.length - 1];
+      if (current && typeof current === "object") {
+        let key: string;
+        let index: number = -1;
+        if (Array.isArray(lastKey)) {
+          key = lastKey[0];
+          index = lastKey[1];
+        } else {
+          key = lastKey;
+        }
+        if (isGroupConditionEvaluator(current) && index !== -1 && current.subNodes) {
+          const updatedConditions = [...current.subNodes];
+          updatedConditions.splice(index, 1);
+          current.subNodes = updatedConditions;
+        } else if (isConditionalEvaluator(current)) {
+          if (key === "evaluation") {
+            current.evaluation = singleConditionEvaluate;
+          } else if (key === "conditionalSubNodes" && current.conditionalSubNodes) {
+            current.conditionalSubNodes[0] = singleConditionEvaluate;
+          } else if (key === "subNodes" && current.subNodes) {
+            current.subNodes[0] = singleConditionEvaluate;
+          }
         }
       }
     }
+    else {
+      newEvaluator = singleConditionEvaluate;
+    }
 
-    setEvaluator(evaluator);
+    setEvaluator(newEvaluator);
+  }
+
+  const getNewParent = (current: Evaluator, operator: OperatorValues) => {
+    let newParent: Evaluator | undefined;
+    
+    if (groupConditionOperators.find((value) => value === operator) !== undefined) {
+      newParent = {
+        id: 1,
+        operator: operator,
+        subNodes: [
+          current,
+          {
+            id: 1,
+            operator: "NONE",
+            condition: undefined,
+          },
+        ],
+      };
+    }
+    else if (conditionalOperators.find((value) => value === operator) !== undefined) {
+      newParent = {
+        id: 1,
+        operator: "IF",
+        evaluation: current,
+        conditionalSubNodes: [{
+          id: 1,
+          operator: "NONE",
+          condition: undefined,
+        }],
+        subNodes: [{
+          id: 1,
+          operator: "NONE",
+          condition: undefined,
+        }],
+      };
+    }
+
+    return newParent;
+  }
+
+  const addParentByPath = (path: Path, operator: OperatorValues) => {
+    let newEvaluator = { ...evaluator };
+    let current: Evaluator;
+    if (path.length > 0) {
+      current = traverseByPath(path.slice(0, path.length - 1), newEvaluator);
+
+      const lastKey = path[path.length - 1];
+      if (current && typeof current === "object") {
+        let key: string;
+        let index: number = -1;
+        if (Array.isArray(lastKey)) {
+          key = lastKey[0];
+          index = lastKey[1];
+        } else {
+          key = lastKey;
+        }
+        if (isGroupConditionEvaluator(current) && index !== -1 && current.subNodes) {
+          let newParent = getNewParent(current.subNodes[index], operator);
+          if (newParent) {
+            const updatedConditions = [...current.subNodes];
+            updatedConditions.splice(index, 1, newParent);
+            current.subNodes = updatedConditions;
+          }
+        } else if (isConditionalEvaluator(current)) {
+          if (key === "evaluation" && current.evaluation) {
+            current.evaluation = getNewParent(current.evaluation, operator);
+          } else if (key === "conditionalSubNodes" && current.conditionalSubNodes) {
+            let newParent = getNewParent(current.conditionalSubNodes[0], operator);
+            if (newParent) {
+              current.conditionalSubNodes[0] = newParent;
+            }
+          } else if (key === "subNodes" && current.subNodes) {
+            let newParent = getNewParent(current.subNodes[0], operator);
+            if (newParent) {
+              current.subNodes[0] = newParent;
+            }
+          }
+        }
+      }
+    }
+    else {
+      let newParent = getNewParent(newEvaluator, operator);
+      if (newParent) {
+        newEvaluator = newParent;
+      }
+    }
+
+    setEvaluator(newEvaluator);
   }
 
   return (
@@ -178,7 +234,9 @@ function ConditionEvaluationSection() {
               conditions={conditions}
               evaluator={evaluator}
               path={[]}
+              addByPath={addByPath}
               deleteByPath={deleteByPath}
+              addParentByPath={addParentByPath}
             />
           </Accordion.Body>
         </Accordion.Item>
