@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Accordion from "react-bootstrap/Accordion";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Card from "react-bootstrap/Card";
@@ -76,170 +75,162 @@ export default function Evaluate({
   }
   
   return (
-    <Accordion defaultActiveKey="0">
-      <Card>
-        {!isSingleConditionEvaluator(evaluator) && (
-          <Card.Header className="p-2 d-flex flex-row gap-2">
-            <Dropdown as={ButtonGroup}>
-              <Dropdown.Toggle split variant="outline-primary border-right-0" />
-              <Dropdown.ItemText className="border border-primary rounded-right text-primary">
-                Evaluate
-              </Dropdown.ItemText>
-              <Dropdown.Menu>
-                <Dropdown.Header>Add a parent Evaluate</Dropdown.Header>
-                {operators.map((operator) => (
-                  <Dropdown.Item key={operator.id} as="button" onClick={() => addParentByPath(path, operator.value)}>
-                    {"Evaluate " + operator.name}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-
-            <Form.Select
-              className="w-auto"
-              aria-label="Combinator"
-              value={selectedOperator}
-              onChange={(e) => setSelectedOperator(e.target.value)}
-              disabled={applicableOperators.length <= 1}
-            >
-              {applicableOperators.map((operator) => (
-                <option key={operator.id} value={operator.value}>
-                  {operator.name}
-                </option>
+    <Card>
+      {!isSingleConditionEvaluator(evaluator) && (
+        <Card.Header className="p-2 d-flex flex-row gap-2">
+          <Dropdown as={ButtonGroup}>
+            <Dropdown.Toggle split variant="outline-primary border-right-0" />
+            <Dropdown.ItemText className="border border-primary rounded-right text-primary">
+              Evaluate
+            </Dropdown.ItemText>
+            <Dropdown.Menu>
+              <Dropdown.Header>Add a parent Evaluate</Dropdown.Header>
+              {operators.map((operator) => (
+                <Dropdown.Item key={operator.id} as="button" onClick={() => addParentByPath(path, operator.value)}>
+                  {"Evaluate " + operator.name}
+                </Dropdown.Item>
               ))}
-            </Form.Select>
+            </Dropdown.Menu>
+          </Dropdown>
 
-            {isGroupConditionEvaluator(evaluator) && <Button variant="outline-success" onClick={() => addByPath(path)}>+</Button>}
+          <Form.Select
+            className="w-auto"
+            aria-label="Combinator"
+            value={selectedOperator}
+            onChange={(e) => setSelectedOperator(e.target.value)}
+            disabled={applicableOperators.length <= 1}
+          >
+            {applicableOperators.map((operator) => (
+              <option key={operator.id} value={operator.value}>
+                {operator.name}
+              </option>
+            ))}
+          </Form.Select>
 
-            <div className="ml-auto d-flex flex-row align-items-center gap-2">
-              <Button
-                variant="outline-danger"
-                onClick={() => deleteByPath(path)}
-              >
-                X
-              </Button>
-              <Accordion.Button className="p-2 w-auto bg-transparent shadow-none" />
+          {isGroupConditionEvaluator(evaluator) && <Button variant="outline-success" onClick={() => addByPath(path)}>+</Button>}
+
+          <Button
+            variant="outline-danger"
+            className="ml-auto"
+            onClick={() => deleteByPath(path)}
+          >
+            X
+          </Button>
+        </Card.Header>
+      )}
+
+      {isSingleConditionEvaluator(evaluator) && (
+        <Card.Body className="p-2 d-flex flex-row gap-2">
+          <Dropdown as={ButtonGroup}>
+            <Dropdown.Toggle split variant="outline-primary border-right-0" />
+            <Dropdown.ItemText className="border border-primary rounded-right text-primary">
+              Evaluate
+            </Dropdown.ItemText>
+            <Dropdown.Menu>
+              <Dropdown.Header>Add a parent Evaluate</Dropdown.Header>
+              {operators.map((operator) => (
+                <Dropdown.Item key={operator.id} as="button" onClick={() => addParentByPath(path, operator.value)}>
+                  {"Evaluate " + operator.name}
+                </Dropdown.Item>
+              ))}
+            </Dropdown.Menu>
+          </Dropdown>
+  
+          <Form.Select
+            className="w-auto"
+            aria-label="Condition"
+            value={selectedCondition}
+            onChange={(e) => setSelectedCondition(e.target.value)}
+          >
+            <option value={undefined}>Select a condition</option>
+            {conditions.map((condition) => (
+              <option key={condition.id} value={condition.id}>
+                {condition.name}
+              </option>
+            ))}
+          </Form.Select>
+  
+          {path && Array.isArray(path[path.length - 1]) && (
+            <Button
+              variant="outline-danger"
+              className="ml-auto"
+              onClick={() => deleteByPath(path)}
+            >
+              X
+            </Button>
+          )}
+        </Card.Body>
+      )}
+
+      {isGroupConditionEvaluator(evaluator) && (
+        <Card.Body className="pl-5 pr-5 pt-3 pb-3 d-flex flex-column gap-3">
+          {evaluator.subNodes?.map((subNode, index) => (
+            <Evaluate
+              key={subNode.id}
+              operators={operators}
+              conditions={conditions}
+              evaluator={subNode}
+              path={[...path, ["subNodes", index]]}
+              addByPath={addByPath}
+              deleteByPath={deleteByPath}
+              addParentByPath={addParentByPath}
+            />
+          ))}
+        </Card.Body>
+      )}
+
+      {isConditionalEvaluator(evaluator) && (
+        <Card.Body className="pl-2 pr-5 pt-3 pb-3 d-flex flex-column gap-3">
+          {evaluator.evaluation && (
+            <div className="d-flex flex-row gap-2">
+              <p className="m-0 mt-3" style={{ width: "40px" }}>
+                if
+              </p>
+              <Evaluate
+                operators={operators}
+                conditions={conditions}
+                evaluator={evaluator.evaluation}
+                path={[...path, "evaluation"]}
+                addByPath={addByPath}
+                deleteByPath={deleteByPath}
+                addParentByPath={addParentByPath}
+              />
             </div>
-          </Card.Header>
-        )}
-
-        {isSingleConditionEvaluator(evaluator) && (
-          <Card.Body className="p-2 d-flex flex-row gap-2">
-            <Dropdown as={ButtonGroup}>
-              <Dropdown.Toggle split variant="outline-primary border-right-0" />
-              <Dropdown.ItemText className="border border-primary rounded-right text-primary">
-                Evaluate
-              </Dropdown.ItemText>
-              <Dropdown.Menu>
-                <Dropdown.Header>Add a parent Evaluate</Dropdown.Header>
-                {operators.map((operator) => (
-                  <Dropdown.Item key={operator.id} as="button" onClick={() => addParentByPath(path, operator.value)}>
-                    {"Evaluate " + operator.name}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown.Menu>
-            </Dropdown>
-    
-            <Form.Select
-              className="w-auto"
-              aria-label="Condition"
-              value={selectedCondition}
-              onChange={(e) => setSelectedCondition(e.target.value)}
-            >
-              <option value={undefined}>Select a condition</option>
-              {conditions.map((condition) => (
-                <option key={condition.id} value={condition.id}>
-                  {condition.name}
-                </option>
-              ))}
-            </Form.Select>
-    
-            {path && Array.isArray(path[path.length - 1]) && (
-              <Button
-                variant="outline-danger"
-                className="ml-auto"
-                onClick={() => deleteByPath(path)}
-              >
-                X
-              </Button>
-            )}
-          </Card.Body>
-        )}
-
-        {isGroupConditionEvaluator(evaluator) && (
-          <Accordion.Collapse eventKey="0">
-            <Card.Body className="pl-5 pr-5 pt-3 pb-3 d-flex flex-column gap-3">
-              {evaluator.subNodes?.map((subNode, index) => (
-                <Evaluate
-                  key={subNode.id}
-                  operators={operators}
-                  conditions={conditions}
-                  evaluator={subNode}
-                  path={[...path, ["subNodes", index]]}
-                  addByPath={addByPath}
-                  deleteByPath={deleteByPath}
-                  addParentByPath={addParentByPath}
-                />
-              ))}
-            </Card.Body>
-          </Accordion.Collapse>
-        )}
-
-        {isConditionalEvaluator(evaluator) && (
-          <Accordion.Collapse eventKey="0">
-            <Card.Body className="pl-2 pr-5 pt-3 pb-3 d-flex flex-column gap-3">
-              {evaluator.evaluation && (
-                <div className="d-flex flex-row gap-2">
-                  <p className="m-0 mt-3" style={{ width: "40px" }}>
-                    if
-                  </p>
-                  <Evaluate
-                    operators={operators}
-                    conditions={conditions}
-                    evaluator={evaluator.evaluation}
-                    path={[...path, "evaluation"]}
-                    addByPath={addByPath}
-                    deleteByPath={deleteByPath}
-                    addParentByPath={addParentByPath}
-                  />
-                </div>
-              )}
-              {evaluator.conditionalSubNodes && (
-                <div className="d-flex flex-row align-items-center gap-2">
-                  <p className="m-0" style={{ width: "40px" }}>
-                    then
-                  </p>
-                  <Evaluate
-                    operators={operators}
-                    conditions={conditions}
-                    evaluator={evaluator.conditionalSubNodes[0]}
-                    path={[...path, "conditionalSubNodes"]}
-                    addByPath={addByPath}
-                    deleteByPath={deleteByPath}
-                    addParentByPath={addParentByPath}
-                  />
-                </div>
-              )}
-              {evaluator.subNodes && (
-                <div className="d-flex flex-row align-items-center gap-2">
-                  <p className="m-0" style={{ width: "40px" }}>
-                    else
-                  </p>
-                  <Evaluate
-                    operators={operators}
-                    conditions={conditions}
-                    evaluator={evaluator.subNodes[0]}
-                    path={[...path, "subNodes"]}
-                    addByPath={addByPath}
-                    deleteByPath={deleteByPath}
-                    addParentByPath={addParentByPath}
-                  />
-                </div>
-              )}
-            </Card.Body>
-          </Accordion.Collapse>
-        )}
-      </Card>
-    </Accordion>
+          )}
+          {evaluator.conditionalSubNodes && (
+            <div className="d-flex flex-row align-items-center gap-2">
+              <p className="m-0" style={{ width: "40px" }}>
+                then
+              </p>
+              <Evaluate
+                operators={operators}
+                conditions={conditions}
+                evaluator={evaluator.conditionalSubNodes[0]}
+                path={[...path, "conditionalSubNodes"]}
+                addByPath={addByPath}
+                deleteByPath={deleteByPath}
+                addParentByPath={addParentByPath}
+              />
+            </div>
+          )}
+          {evaluator.subNodes && (
+            <div className="d-flex flex-row align-items-center gap-2">
+              <p className="m-0" style={{ width: "40px" }}>
+                else
+              </p>
+              <Evaluate
+                operators={operators}
+                conditions={conditions}
+                evaluator={evaluator.subNodes[0]}
+                path={[...path, "subNodes"]}
+                addByPath={addByPath}
+                deleteByPath={deleteByPath}
+                addParentByPath={addParentByPath}
+              />
+            </div>
+          )}
+        </Card.Body>
+      )}
+    </Card>
   );
 }
