@@ -15,15 +15,15 @@ export type OperatorValues =
   | ConditionalOperatorValues;
 
 export type Operator = {
-  id: number;
+  id: string;
   value: OperatorValues;
   name: string;
 };
 
-export type Condition = { id: number; name: string };
+export type Condition = { id: string; name: string };
 
 export type Evaluator = {
-  id: number;
+  id: string;
   operator: OperatorValues;
   condition?: Condition | undefined;
   subNodes?: Evaluator[];

@@ -10,10 +10,11 @@ import {
   groupConditionOperators,
   conditionalOperators,
 } from "./Constants";
+import { v4 as uuid } from '@lukeed/uuid';
 
-function ConditionEvaluationSection() {
+function ConditionEvaluationSection({ conditions }: { conditions: Condition[] }) {
   const initialEvaluator: Evaluator = {
-    id: 1,
+    id: uuid(),
     operator: "NONE",
     condition: undefined,
   };
@@ -21,17 +22,9 @@ function ConditionEvaluationSection() {
   const [evaluator, setEvaluator] = useState<Evaluator>(initialEvaluator);
 
   const operators: Operator[] = [
-    { id: 1, value: "AND", name: "and" },
-    { id: 2, value: "OR", name: "or" },
-    { id: 3, value: "IF", name: "if then else" },
-  ];
-
-  const conditions: Condition[] = [
-    { id: 1, name: "Same device name" },
-    { id: 2, name: "This Item's country is USA" },
-    { id: 3, name: "Existing Item's country is USA" },
-    { id: 4, name: "Same state" },
-    { id: 5, name: "Same country" },
+    { id: uuid(), value: "AND", name: "and" },
+    { id: uuid(), value: "OR", name: "or" },
+    { id: uuid(), value: "IF", name: "if then else" },
   ];
 
   function isGroupConditionEvaluator(evaluator: Evaluator) {
@@ -83,7 +76,7 @@ function ConditionEvaluationSection() {
     let newEvaluator = { ...evaluator };
     let current = traverseByPath(path, newEvaluator);
     const singleConditionEvaluate: Evaluator = {
-      id: 1,
+      id: uuid(),
       operator: "NONE",
       condition: undefined,
     };
@@ -95,7 +88,7 @@ function ConditionEvaluationSection() {
   const deleteByPath = (path: Path) => {
     let newEvaluator = { ...evaluator };
     const singleConditionEvaluate: Evaluator = {
-      id: 1,
+      id: uuid(),
       operator: "NONE",
       condition: undefined,
     };
@@ -140,12 +133,12 @@ function ConditionEvaluationSection() {
     
     if (groupConditionOperators.find((value) => value === operator) !== undefined) {
       newParent = {
-        id: 1,
+        id: uuid(),
         operator: operator,
         subNodes: [
           current,
           {
-            id: 1,
+            id: uuid(),
             operator: "NONE",
             condition: undefined,
           },
@@ -154,16 +147,16 @@ function ConditionEvaluationSection() {
     }
     else if (conditionalOperators.find((value) => value === operator) !== undefined) {
       newParent = {
-        id: 1,
+        id: uuid(),
         operator: "IF",
         evaluation: current,
         conditionalSubNodes: [{
-          id: 1,
+          id: uuid(),
           operator: "NONE",
           condition: undefined,
         }],
         subNodes: [{
-          id: 1,
+          id: uuid(),
           operator: "NONE",
           condition: undefined,
         }],

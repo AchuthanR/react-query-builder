@@ -34,7 +34,7 @@ export default function Evaluate({
   addParentByPath: (path: Path, type: OperatorValues) => void;
 }) {
   const [selectedCondition, setSelectedCondition] = useState<
-    number | undefined
+    string | undefined
   >(evaluator?.condition?.id);
   const [selectedOperator, setSelectedOperator] = useState<
     string | undefined
@@ -144,7 +144,7 @@ export default function Evaluate({
               className="w-auto"
               aria-label="Condition"
               value={selectedCondition}
-              onChange={(e) => setSelectedCondition(Number(e.target.value))}
+              onChange={(e) => setSelectedCondition(e.target.value)}
             >
               <option value={undefined}>Select a condition</option>
               {conditions.map((condition) => (
