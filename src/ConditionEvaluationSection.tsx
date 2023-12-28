@@ -4,7 +4,7 @@ import Evaluate from "./Evaluate";
 import {
   Operator,
   OperatorValues,
-  Condition,
+  Condition1,
   Evaluator,
   Path,
   groupConditionOperators,
@@ -12,7 +12,7 @@ import {
 } from "./Constants";
 import { v4 as uuid } from '@lukeed/uuid';
 
-function ConditionEvaluationSection({ conditions }: { conditions: Condition[] }) {
+function ConditionEvaluationSection({ conditions }: { conditions: Condition1[] }) {
   const initialEvaluator: Evaluator = {
     id: uuid(),
     operator: "NONE",
@@ -22,9 +22,9 @@ function ConditionEvaluationSection({ conditions }: { conditions: Condition[] })
   const [evaluator, setEvaluator] = useState<Evaluator>(initialEvaluator);
 
   const operators: Operator[] = [
-    { id: uuid(), value: "AND", name: "and" },
-    { id: uuid(), value: "OR", name: "or" },
-    { id: uuid(), value: "IF", name: "if then else" },
+    { id: uuid(), value: "AND", name: "AND - All conditions directly under this group should be satisfied" },
+    { id: uuid(), value: "OR", name: "OR - At least one condition directly under this group should be satisified" },
+    { id: uuid(), value: "IF", name: "IF - Choose subsequent condition to evaluate based on the outcome of a condition" },
   ];
 
   function isGroupConditionEvaluator(evaluator: Evaluator) {
@@ -216,6 +216,20 @@ function ConditionEvaluationSection({ conditions }: { conditions: Condition[] })
     setEvaluator(newEvaluator);
   }
 
+  const updateConditionByPath = (path: Path, condition: Condition1) => {
+    let newEvaluator = { ...evaluator };
+    let current = traverseByPath(path, newEvaluator);
+    current.condition = condition;
+    setEvaluator(newEvaluator);
+  }
+
+  const updateOperatorByPath = (path: Path, operator: OperatorValues) => {
+    let newEvaluator = { ...evaluator };
+    let current = traverseByPath(path, newEvaluator);
+    current.operator = operator;
+    setEvaluator(newEvaluator);
+  }
+
   return (
     <>
       <Accordion defaultActiveKey="0">
@@ -230,7 +244,14 @@ function ConditionEvaluationSection({ conditions }: { conditions: Condition[] })
               addByPath={addByPath}
               deleteByPath={deleteByPath}
               addParentByPath={addParentByPath}
+              updateConditionByPath={updateConditionByPath}
+              updateOperatorByPath={updateOperatorByPath}
             />
+
+            <div className="mt-5">
+              <h5>JSON</h5>
+              <pre>{JSON.stringify(evaluator, null, 4)}</pre>
+            </div>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Card from "react-bootstrap/Card";
@@ -6,7 +5,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Form from "react-bootstrap/Form";
 import {
   Operator,
-  Condition,
+  Condition1,
   Evaluator,
   Path,
   singleConditionOperators,
@@ -23,25 +22,19 @@ export default function Evaluate({
   addByPath,
   deleteByPath,
   addParentByPath,
+  updateConditionByPath,
+  updateOperatorByPath,
 }: {
   operators: Operator[];
-  conditions: Condition[];
+  conditions: Condition1[];
   evaluator: Evaluator;
   path: Path;
   addByPath: (path: Path) => void;
   deleteByPath: (path: Path) => void;
   addParentByPath: (path: Path, type: OperatorValues) => void;
+  updateConditionByPath: (path: Path, condition: Condition1) => void;
+  updateOperatorByPath: (path: Path, operator: OperatorValues) => void;
 }) {
-  const [selectedCondition, setSelectedCondition] = useState<
-    string | undefined
-  >(evaluator?.condition?.id);
-  const [selectedOperator, setSelectedOperator] = useState<
-    string | undefined
-  >(
-    operators.find((operator) => operator.value === evaluator.operator)
-      ?.value
-  );
-
   function isSingleConditionEvaluator(evaluator: Evaluator) {
     return (
       singleConditionOperators.find(
@@ -96,8 +89,10 @@ export default function Evaluate({
           <Form.Select
             className="w-auto"
             aria-label="Combinator"
-            value={selectedOperator}
-            onChange={(e) => setSelectedOperator(e.target.value)}
+            value={evaluator.operator}
+            onChange={(e) => {
+              updateOperatorByPath(path, e.target.value as OperatorValues);
+            }}
             disabled={applicableOperators.length <= 1}
           >
             {applicableOperators.map((operator) => (
@@ -139,12 +134,19 @@ export default function Evaluate({
           <Form.Select
             className="w-auto"
             aria-label="Condition"
-            value={selectedCondition}
-            onChange={(e) => setSelectedCondition(e.target.value)}
+            value={evaluator.condition?.id + "," + evaluator.condition?.name}
+            onChange={(e) => {
+              const [id, name] = e.target.value.split(",");
+              let newCondition: Condition1 = {
+                id: id,
+                name: name
+              };
+              updateConditionByPath(path, newCondition);
+            }}
           >
             <option value={undefined}>Select a condition</option>
             {conditions.map((condition) => (
-              <option key={condition.id} value={condition.id}>
+              <option key={condition.id} value={[condition.id, condition.name]}>
                 {condition.name}
               </option>
             ))}
@@ -174,6 +176,8 @@ export default function Evaluate({
               addByPath={addByPath}
               deleteByPath={deleteByPath}
               addParentByPath={addParentByPath}
+              updateConditionByPath={updateConditionByPath}
+              updateOperatorByPath={updateOperatorByPath}
             />
           ))}
         </Card.Body>
@@ -183,8 +187,8 @@ export default function Evaluate({
         <Card.Body className="pl-2 pr-5 pt-3 pb-3 d-flex flex-column gap-3">
           {evaluator.evaluation && (
             <div className="d-flex flex-row gap-2">
-              <p className="m-0 mt-3" style={{ width: "40px" }}>
-                if
+              <p className="m-0 mt-3" style={{ width: "100px" }}>
+                when
               </p>
               <Evaluate
                 operators={operators}
@@ -194,13 +198,15 @@ export default function Evaluate({
                 addByPath={addByPath}
                 deleteByPath={deleteByPath}
                 addParentByPath={addParentByPath}
+                updateConditionByPath={updateConditionByPath}
+                updateOperatorByPath={updateOperatorByPath}
               />
             </div>
           )}
           {evaluator.conditionalSubNodes && (
             <div className="d-flex flex-row align-items-center gap-2">
-              <p className="m-0" style={{ width: "40px" }}>
-                then
+              <p className="m-0" style={{ width: "100px" }}>
+                is satisfied, then
               </p>
               <Evaluate
                 operators={operators}
@@ -210,13 +216,15 @@ export default function Evaluate({
                 addByPath={addByPath}
                 deleteByPath={deleteByPath}
                 addParentByPath={addParentByPath}
+                updateConditionByPath={updateConditionByPath}
+                updateOperatorByPath={updateOperatorByPath}
               />
             </div>
           )}
           {evaluator.subNodes && (
             <div className="d-flex flex-row align-items-center gap-2">
-              <p className="m-0" style={{ width: "40px" }}>
-                else
+              <p className="m-0" style={{ width: "100px" }}>
+                is not satisfied, then
               </p>
               <Evaluate
                 operators={operators}
@@ -226,6 +234,8 @@ export default function Evaluate({
                 addByPath={addByPath}
                 deleteByPath={deleteByPath}
                 addParentByPath={addParentByPath}
+                updateConditionByPath={updateConditionByPath}
+                updateOperatorByPath={updateOperatorByPath}
               />
             </div>
           )}
