@@ -1,3 +1,14 @@
+export type RuleDetails = {
+  ruleName: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  status: string;
+  detectConflictsWithinSameRequest: boolean;
+  itemTypes: string[];
+  conflictTypes: string[];
+};
+
 export type AttributeType = {
   name: string;
   category: string;

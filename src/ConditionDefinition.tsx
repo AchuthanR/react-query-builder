@@ -16,6 +16,7 @@ function ConditionDefinition({
     functions,
     validators,
     condition,
+    applicableItemTypes,
     updateConditionName,
     updateAttribute,
     updateFunctions,
@@ -28,6 +29,7 @@ function ConditionDefinition({
     functions: Function[],
     validators: Validator[],
     condition: Condition,
+    applicableItemTypes: string[],
     updateConditionName: (newName: string) => void,
     updateAttribute: (whichItem: string, newAttribute: Attribute) => void,
     updateFunctions: (whichItem: string, newFunctions: Function[]) => void,
@@ -135,7 +137,7 @@ function ConditionDefinition({
                       disabled={!objForItem.selectedAttribute.attributeCategory || objForItem.selectedAttribute.attributeCategory === "-1"}
                       aria-label="Select attribute type">
                       <option value="-1">Select attribute type</option>
-                      {attributeTypes.filter(attributeType => attributeType.category === objForItem.selectedAttribute.attributeCategory).map((attributeType, index) => (
+                      {attributeTypes.filter(attributeType => applicableItemTypes.includes(attributeType.name) && attributeType.category === objForItem.selectedAttribute.attributeCategory).map((attributeType, index) => (
                         <option key={index} value={attributeType.name}>{attributeType.name}</option>
                       ))}
                     </Form.Select>

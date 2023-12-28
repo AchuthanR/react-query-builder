@@ -248,10 +248,14 @@ function ConditionEvaluationSection({ conditions }: { conditions: Condition1[] }
               updateOperatorByPath={updateOperatorByPath}
             />
 
-            <div className="mt-5">
-              <h5>JSON</h5>
-              <pre>{JSON.stringify(evaluator, null, 4)}</pre>
-            </div>
+            <Accordion className="mt-5">
+              <Accordion.Item eventKey="0">
+                <Accordion.Header>JSON</Accordion.Header>
+                <Accordion.Body>
+                  <pre>{JSON.stringify(evaluator, null, 4)}</pre>
+                </Accordion.Body>
+              </Accordion.Item>
+            </Accordion>
           </Accordion.Body>
         </Accordion.Item>
       </Accordion>
