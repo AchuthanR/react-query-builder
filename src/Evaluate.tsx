@@ -8,14 +8,11 @@ import {
   Condition1,
   Evaluator,
   Path,
-  singleConditionOperators,
-  groupConditionOperators,
-  conditionalOperators,
   OperatorValues,
-} from "./Constants";
+} from "./Types";
+import { singleConditionOperators, groupConditionOperators, conditionalOperators, operators } from "./Constants";
 
 export default function Evaluate({
-  operators,
   conditions,
   evaluator,
   path,
@@ -25,7 +22,6 @@ export default function Evaluate({
   updateConditionByPath,
   updateOperatorByPath,
 }: {
-  operators: Operator[];
   conditions: Condition1[];
   evaluator: Evaluator;
   path: Path;
@@ -169,7 +165,6 @@ export default function Evaluate({
           {evaluator.subNodes?.map((subNode, index) => (
             <Evaluate
               key={subNode.id}
-              operators={operators}
               conditions={conditions}
               evaluator={subNode}
               path={[...path, ["subNodes", index]]}
@@ -191,7 +186,6 @@ export default function Evaluate({
                 when
               </p>
               <Evaluate
-                operators={operators}
                 conditions={conditions}
                 evaluator={evaluator.evaluation}
                 path={[...path, "evaluation"]}
@@ -209,7 +203,6 @@ export default function Evaluate({
                 is satisfied, then
               </p>
               <Evaluate
-                operators={operators}
                 conditions={conditions}
                 evaluator={evaluator.conditionalSubNodes[0]}
                 path={[...path, "conditionalSubNodes"]}
@@ -227,7 +220,6 @@ export default function Evaluate({
                 is not satisfied, then
               </p>
               <Evaluate
-                operators={operators}
                 conditions={conditions}
                 evaluator={evaluator.subNodes[0]}
                 path={[...path, "subNodes"]}

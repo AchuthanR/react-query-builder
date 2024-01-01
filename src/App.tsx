@@ -4,49 +4,10 @@ import { useState } from "react";
 import RuleDetailsSection from "./RuleDetailsSection";
 import ConditionDefinitionSection from "./ConditionDefinitionSection";
 import ConditionEvaluationSection from "./ConditionEvaluationSection";
-import { Attribute, AttributeType, Condition1, Function, RuleDetails, Validator } from "./Constants";
+import { Condition1, RuleDetails } from "./Types";
 import { v4 as uuid } from '@lukeed/uuid';
 
 function App() {
-  const attributeCategories: string[] = ["Request", "Item", "Impact"];
-
-  const attributeTypes: AttributeType[] = [
-    { name: "Circuit", category: "Item" },
-    { name: "Device", category: "Item" },
-    { name: "Cable", category: "Item" },
-    { name: "Hub", category: "Item" },
-    { name: "Ring", category: "Item" },
-    { name: "Video Channel", category: "Item" },
-    { name: "Cell Site", category: "Item" },
-    { name: "Circuit", category: "Impact" },
-    { name: "Device", category: "Impact" },
-    { name: "Video Channel", category: "Impact" },
-    { name: "Application", category: "Impact" },
-  ];
-
-  const attributes: Attribute[] = [
-    { name: "Circuit name", attributeType: "Circuit", attributeCategory: "Item", dataType: "string" },
-    { name: "Device name", attributeType: "Device", attributeCategory: "Item", dataType: "string" },
-    { name: "Adjacent devices", attributeType: "Device", attributeCategory: "Item", dataType: "list<string>" },
-    { name: "Circuit name", attributeType: "Circuit", attributeCategory: "Impact", dataType: "string" },
-    { name: "Device Impacts count", attributeType: "Device", attributeCategory: "Impact", dataType: "number" },
-  ];
-
-  const functions: Function[] = [
-    { name: "Suffix", parameters: "", inputDataType: "string", outputDataType: "string" },
-    { name: "Sub-string", parameters: "", inputDataType: "string", outputDataType: "string" },
-    { name: "Split", parameters: "", inputDataType: "string", outputDataType: "list<string>" },
-    { name: "Count", parameters: "", inputDataType: "list<string>", outputDataType: "number" },
-    { name: "Add", parameters: "", inputDataType: "number", outputDataType: "number" },
-    { name: "Multiply", parameters: "", inputDataType: "number", outputDataType: "number" },
-  ];
-
-  const validators: Validator[] = [
-    { name: "Equals", operandsDataTypes: [["string", "string"]] },
-    { name: "Not equals", operandsDataTypes: [["string", "string"]] },
-    { name: "Contains", operandsDataTypes: [["string", "string"], ["list<string>", "string"]] },
-  ];
-
   const [ruleDetails, setRuleDetails] = useState<RuleDetails>({
     ruleName: "",
     description: "",
@@ -142,11 +103,6 @@ function App() {
         updateConflictTypes={updateConflictTypes} />
       
       <ConditionDefinitionSection
-        attributeCategories={attributeCategories}
-        attributeTypes={attributeTypes}
-        attributes={attributes}
-        functions={functions}
-        validators={validators}
         applicableItemTypes={ruleDetails.itemTypes}
         addCondition={addCondition} />
       

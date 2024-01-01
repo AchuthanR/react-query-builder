@@ -1,6 +1,6 @@
 import Accordion from "react-bootstrap/Accordion";
 import Form from "react-bootstrap/Form";
-import { RuleDetails } from "./Constants";
+import { RuleDetails } from "./Types";
 
 function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDetectConflictsWithinSameRequest, updateItemTypes, updateConflictTypes } : {
     ruleDetails: RuleDetails,

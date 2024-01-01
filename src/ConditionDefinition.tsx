@@ -2,19 +2,14 @@ import Button from "react-bootstrap/Button";
 import { Card, CloseButton } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import {
-  AttributeType,
   Attribute,
   Function,
   Validator,
   Condition,
-} from "./Constants";
+} from "./Types";
+import { attributeCategories, attributeTypes, attributes, functions, validators } from "./Constants";
 
 function ConditionDefinition({
-    attributeCategories,
-    attributeTypes,
-    attributes,
-    functions,
-    validators,
     condition,
     applicableItemTypes,
     updateConditionName,
@@ -23,11 +18,6 @@ function ConditionDefinition({
     updateValidator,
     updateValidationInput
   } : {
-    attributeCategories: string[],
-    attributeTypes: AttributeType[],
-    attributes: Attribute[],
-    functions: Function[],
-    validators: Validator[],
     condition: Condition,
     applicableItemTypes: string[],
     updateConditionName: (newName: string) => void,

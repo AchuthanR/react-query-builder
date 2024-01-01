@@ -4,22 +4,16 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import {
   Attribute,
-  AttributeType,
   Condition1,
   Condition,
   Function,
   Validator,
-} from "./Constants";
+} from "./Types";
 import ConditionDefinition from "./ConditionDefinition";
 import { v4 as uuid } from '@lukeed/uuid';
 
-function ConditionDefinitionSection({ attributeCategories, attributeTypes, attributes, functions, validators, applicableItemTypes, addCondition }
+function ConditionDefinitionSection({ applicableItemTypes, addCondition }
   : {
-      attributeCategories: string[],
-      attributeTypes: AttributeType[],
-      attributes: Attribute[],
-      functions: Function[],
-      validators: Validator[],
       applicableItemTypes: string[],
       addCondition: (condition: Condition1) => void
   }) {
@@ -99,11 +93,6 @@ function ConditionDefinitionSection({ attributeCategories, attributeTypes, attri
           <Accordion.Header>Condition Definition</Accordion.Header>
           <Accordion.Body>
             <ConditionDefinition
-              attributeCategories={attributeCategories}
-              attributeTypes={attributeTypes}
-              attributes={attributes}
-              functions={functions}
-              validators={validators}
               condition={condition}
               applicableItemTypes={applicableItemTypes}
               updateConditionName={updateConditionName}

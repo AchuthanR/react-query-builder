@@ -2,30 +2,20 @@ import { useState } from "react";
 import Accordion from "react-bootstrap/Accordion";
 import Evaluate from "./Evaluate";
 import {
-  Operator,
   OperatorValues,
   Condition1,
   Evaluator,
   Path,
-  groupConditionOperators,
-  conditionalOperators,
-} from "./Constants";
+} from "./Types";
+import { groupConditionOperators, conditionalOperators } from "./Constants";
 import { v4 as uuid } from '@lukeed/uuid';
 
 function ConditionEvaluationSection({ conditions }: { conditions: Condition1[] }) {
-  const initialEvaluator: Evaluator = {
+  const [evaluator, setEvaluator] = useState<Evaluator>({
     id: uuid(),
     operator: "NONE",
     condition: undefined,
-  };
-  
-  const [evaluator, setEvaluator] = useState<Evaluator>(initialEvaluator);
-
-  const operators: Operator[] = [
-    { id: uuid(), value: "AND", name: "AND - All conditions directly under this group should be satisfied" },
-    { id: uuid(), value: "OR", name: "OR - At least one condition directly under this group should be satisified" },
-    { id: uuid(), value: "IF", name: "IF - Choose subsequent condition to evaluate based on the outcome of a condition" },
-  ];
+  });
 
   function isGroupConditionEvaluator(evaluator: Evaluator) {
     return (
@@ -237,7 +227,6 @@ function ConditionEvaluationSection({ conditions }: { conditions: Condition1[] }
           <Accordion.Header>Condition Evaluation</Accordion.Header>
           <Accordion.Body>
             <Evaluate
-              operators={operators}
               conditions={conditions}
               evaluator={evaluator}
               path={[]}
