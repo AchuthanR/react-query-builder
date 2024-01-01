@@ -14,7 +14,7 @@ function ConditionEvaluationSection({ conditions }: { conditions: Condition1[] }
   const [evaluator, setEvaluator] = useState<Evaluator>({
     id: uuid(),
     operator: "NONE",
-    condition: undefined,
+    condition: null,
   });
 
   function isGroupConditionEvaluator(evaluator: Evaluator) {
@@ -68,7 +68,7 @@ function ConditionEvaluationSection({ conditions }: { conditions: Condition1[] }
     const singleConditionEvaluate: Evaluator = {
       id: uuid(),
       operator: "NONE",
-      condition: undefined,
+      condition: null,
     };
     current.subNodes?.splice(0, 0, singleConditionEvaluate);
 
@@ -80,7 +80,7 @@ function ConditionEvaluationSection({ conditions }: { conditions: Condition1[] }
     const singleConditionEvaluate: Evaluator = {
       id: uuid(),
       operator: "NONE",
-      condition: undefined,
+      condition: null,
     };
 
     if (path.length > 0) {
@@ -130,7 +130,7 @@ function ConditionEvaluationSection({ conditions }: { conditions: Condition1[] }
           {
             id: uuid(),
             operator: "NONE",
-            condition: undefined,
+            condition: null,
           },
         ],
       };
@@ -143,12 +143,12 @@ function ConditionEvaluationSection({ conditions }: { conditions: Condition1[] }
         conditionalSubNodes: [{
           id: uuid(),
           operator: "NONE",
-          condition: undefined,
+          condition: null,
         }],
         subNodes: [{
           id: uuid(),
           operator: "NONE",
-          condition: undefined,
+          condition: null,
         }],
       };
     }

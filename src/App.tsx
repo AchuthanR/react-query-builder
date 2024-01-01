@@ -9,14 +9,14 @@ import { v4 as uuid } from '@lukeed/uuid';
 
 function App() {
   const [ruleDetails, setRuleDetails] = useState<RuleDetails>({
-    ruleName: "",
-    description: "",
-    startDate: "",
-    endDate: "",
-    status: "",
-    detectConflictsWithinSameRequest: false,
+    ruleName: null,
+    description: null,
+    startDate: null,
+    endDate: null,
+    status: null,
+    detectConflictsWithinSameRequest: null,
     itemTypes: ["Circuit", "Device"],
-    conflictTypes: [],
+    conflictTypes: null,
   });
 
   const [conditions, setConditions] = useState<Condition1[]>([
@@ -65,26 +65,40 @@ function App() {
   const updateItemTypes = (itemType: string, updateAction: string) => {
     if (updateAction === "add") {
       let newRuleDetails = { ...ruleDetails };
-      newRuleDetails.itemTypes.push(itemType);
+      if (newRuleDetails.itemTypes) {
+        newRuleDetails.itemTypes.push(itemType);
+      }
+      else {
+        newRuleDetails.itemTypes = [itemType];
+      }
       setRuleDetails(newRuleDetails);
     }
     else if (updateAction === "remove") {
       let newRuleDetails = { ...ruleDetails };
-      newRuleDetails.itemTypes = newRuleDetails.itemTypes.filter(type => type !== itemType);
-      setRuleDetails(newRuleDetails);
+      if (newRuleDetails.itemTypes) {
+        newRuleDetails.itemTypes = newRuleDetails.itemTypes.filter(type => type !== itemType);
+        setRuleDetails(newRuleDetails);
+      }
     }
   };
 
   const updateConflictTypes = (conflictType: string, updateAction: string) => {
     if (updateAction === "add") {
       let newRuleDetails = { ...ruleDetails };
-      newRuleDetails.conflictTypes.push(conflictType);
+      if (newRuleDetails.conflictTypes) {
+        newRuleDetails.conflictTypes.push(conflictType);
+      }
+      else {
+        newRuleDetails.conflictTypes = [conflictType];
+      }
       setRuleDetails(newRuleDetails);
     }
     else if (updateAction === "remove") {
       let newRuleDetails = { ...ruleDetails };
-      newRuleDetails.conflictTypes = newRuleDetails.conflictTypes.filter(type => type !== conflictType);
-      setRuleDetails(newRuleDetails);
+      if (newRuleDetails.conflictTypes) {
+        newRuleDetails.conflictTypes = newRuleDetails.conflictTypes.filter(type => type !== conflictType);
+        setRuleDetails(newRuleDetails);
+      }
     }
   };
 

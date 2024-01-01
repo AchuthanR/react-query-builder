@@ -1,14 +1,14 @@
 import { conditionalOperators, groupConditionOperators, singleConditionOperators } from "./Constants";
 
 export type RuleDetails = {
-  ruleName: string;
-  description: string;
-  startDate: string;
-  endDate: string;
-  status: string;
-  detectConflictsWithinSameRequest: boolean;
-  itemTypes: string[];
-  conflictTypes: string[];
+  ruleName: string | null;
+  description: string | null;
+  startDate: string | null;
+  endDate: string | null;
+  status: string | null;
+  detectConflictsWithinSameRequest: boolean | null;
+  itemTypes: string[] | null;
+  conflictTypes: string[] | null;
 };
 
 export type AttributeType = {
@@ -17,32 +17,36 @@ export type AttributeType = {
 };
 
 export type Attribute = {
-  name: string;
-  attributeType: string;
-  attributeCategory: string;
-  dataType: string;
+  id?: string;
+  name: string | null;
+  type: string | null;
+  category: string | null;
+  dataType: string | null;
 };
 
 export type Function = {
-  name: string;
-  parameters: string;
-  inputDataType: string;
-  outputDataType: string;
+  id?: string;
+  name: string | null;
+  parameters: string | null;
+  inputDataType: string | null;
+  outputDataType: string | null;
 };
 
 export type Validator = {
-  name: string;
-  operandsDataTypes: [string, string][];
+  id?: string;
+  name: string | null;
+  operandsDataTypes: [string, string][] | null;
 };
 
 export type Condition = {
-  name: string;
-  thisItemAttribute: Attribute;
-  existingItemAttribute: Attribute;
-  thisItemFunctions: Function[];
-  existingItemFunctions: Function[];
+  id: string;
+  name: string | null;
+  thisItemAttribute: Attribute | null;
+  existingItemAttribute: Attribute | null;
+  thisItemFunctions: Function[] | null;
+  existingItemFunctions: Function[] | null;
   validator: Validator;
-  validationInput: string;
+  validationInput: string | null;
 };
 
 export type OperatorValues =
@@ -61,7 +65,7 @@ export type Condition1 = { id: string; name: string };
 export type Evaluator = {
   id: string;
   operator: OperatorValues;
-  condition?: Condition1 | undefined;
+  condition?: Condition1 | null;
   subNodes?: Evaluator[];
   evaluation?: Evaluator;
   conditionalSubNodes?: Evaluator[];

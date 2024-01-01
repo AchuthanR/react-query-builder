@@ -14,74 +14,58 @@ import { v4 as uuid } from '@lukeed/uuid';
 
 function ConditionDefinitionSection({ applicableItemTypes, addCondition }
   : {
-      applicableItemTypes: string[],
+      applicableItemTypes: string[] | null,
       addCondition: (condition: Condition1) => void
   }) {
   const [conditionName, setConditionName] = useState<string>("");
 
   const [condition, setCondition] = useState<Condition>({
-    name: "",
+    id: uuid(),
+    name: null,
     thisItemAttribute: {
-      name: "",
-      attributeCategory: "",
-      attributeType: "",
-      dataType: "",
+      name: null,
+      category: null,
+      type: null,
+      dataType: null,
     },
-    thisItemFunctions: [],
-    existingItemAttribute: {
-      name: "",
-      attributeCategory: "",
-      attributeType: "",
-      dataType: "",
-    },
-    existingItemFunctions: [],
+    thisItemFunctions: null,
+    existingItemAttribute: null,
+    existingItemFunctions: null,
     validator: {
-      name: "",
-      operandsDataTypes: [["", ""]],
+      name: null,
+      operandsDataTypes: null,
     },
-    validationInput: "",
+    validationInput: null,
   });
 
   const updateConditionName = (newName: string) => {
     let newCondition = { ...condition };
-      newCondition.name = newName;
-      setCondition(newCondition);
+    newCondition.name = newName;
+    setCondition(newCondition);
   }
 
-  const updateAttribute = (whichItem: string, newAttribute: Attribute) => {
+  const updateCondition = (whichItem: string, newAttribute: Attribute | null, newFunctions: Function[] | null, newValidator: Validator, newValidationInput: string | null) => {
     if (whichItem === "This Item") {
       let newCondition = { ...condition };
       newCondition.thisItemAttribute = newAttribute;
+      newCondition.thisItemFunctions = newFunctions;
+      newCondition.validator = newValidator;
+      newCondition.validationInput = newValidationInput;
       setCondition(newCondition);
     }
     else if (whichItem === "Existing Item") {
       let newCondition = { ...condition };
       newCondition.existingItemAttribute = newAttribute;
-      setCondition(newCondition);
-    }
-  };
-
-  const updateFunctions = (whichItem: string, newFunctions: Function[]) => {
-    if (whichItem === "This Item") {
-      let newCondition = { ...condition };
-      newCondition.thisItemFunctions = newFunctions;
-      setCondition(newCondition);
-    }
-    else if (whichItem === "Existing Item") {
-      let newCondition = { ...condition };
       newCondition.existingItemFunctions = newFunctions;
+      newCondition.validator = newValidator;
+      newCondition.validationInput = newValidationInput;
       setCondition(newCondition);
     }
   };
 
-  const updateValidator = (newValidator: Validator) => {
+  const updateValidator = (newValidator: Validator, newValidationInput: string | null) => {
     let newCondition = { ...condition };
     newCondition.validator = newValidator;
-    setCondition(newCondition);
-  };
-
-  const updateValidationInput = (newValidationInput: string) => {
-    let newCondition = { ...condition };
     newCondition.validationInput = newValidationInput;
     setCondition(newCondition);
   };
@@ -96,10 +80,8 @@ function ConditionDefinitionSection({ applicableItemTypes, addCondition }
               condition={condition}
               applicableItemTypes={applicableItemTypes}
               updateConditionName={updateConditionName}
-              updateAttribute={updateAttribute}
-              updateFunctions={updateFunctions}
-              updateValidator={updateValidator}
-              updateValidationInput={updateValidationInput} />
+              updateCondition={updateCondition}
+              updateValidator={updateValidator} />
             
             <Accordion className="mt-5">
               <Accordion.Item eventKey="0">

@@ -24,7 +24,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                     type="text"
                     placeholder="Enter rule name"
                     className="w-auto"
-                    value={ruleDetails.ruleName}
+                    value={ruleDetails.ruleName ?? undefined}
                     onChange={(e) => updateField("ruleName", e.target.value)} />
                 </Form.Group>
                 
@@ -34,7 +34,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                     type="text"
                     placeholder="Enter description"
                     className="w-auto"
-                    value={ruleDetails.description}
+                    value={ruleDetails.description ?? undefined}
                     onChange={(e) => updateField("description", e.target.value)} />
                 </Form.Group>
                 
@@ -44,7 +44,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                     type="date"
                     placeholder="Enter start date"
                     className="w-auto"
-                    value={ruleDetails.startDate}
+                    value={ruleDetails.startDate ?? undefined}
                     onChange={(e) => updateField("startDate", e.target.value)} />
                 </Form.Group>
                 
@@ -54,7 +54,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                     type="date"
                     placeholder="Enter end date"
                     className="w-auto"
-                    value={ruleDetails.endDate}
+                    value={ruleDetails.endDate ?? undefined}
                     onChange={(e) => updateField("endDate", e.target.value)} />
                 </Form.Group>
 
@@ -86,7 +86,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                   label="Detect conflicts within same request"
                   name="detectSameRequestConflict"
                   type="checkbox"
-                  checked={ruleDetails.detectConflictsWithinSameRequest}
+                  checked={ruleDetails.detectConflictsWithinSameRequest ?? undefined}
                   onChange={(e) => updateDetectConflictsWithinSameRequest(e.target.checked)}
                 />
               </Form.Group>
@@ -99,7 +99,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                   label="Circuit"
                   name="itemTypes"
                   type="checkbox"
-                  checked={ruleDetails.itemTypes.includes("Circuit")}
+                  checked={ruleDetails.itemTypes?.includes("Circuit")}
                   onChange={(e) => updateItemTypes("Circuit", e.target.checked ? "add" : "remove")}
                 />
                 <Form.Check
@@ -107,7 +107,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                   label="Device"
                   name="itemTypes"
                   type="checkbox"
-                  checked={ruleDetails.itemTypes.includes("Device")}
+                  checked={ruleDetails.itemTypes?.includes("Device")}
                   onChange={(e) => updateItemTypes("Device", e.target.checked ? "add" : "remove")}
                 />
                 <Form.Check
@@ -115,7 +115,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                   label="Cable"
                   name="itemTypes"
                   type="checkbox"
-                  checked={ruleDetails.itemTypes.includes("Cable")}
+                  checked={ruleDetails.itemTypes?.includes("Cable")}
                   onChange={(e) => updateItemTypes("Cable", e.target.checked ? "add" : "remove")}
                 />
                 <Form.Check
@@ -123,7 +123,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                   label="Hub"
                   name="itemTypes"
                   type="checkbox"
-                  checked={ruleDetails.itemTypes.includes("Hub")}
+                  checked={ruleDetails.itemTypes?.includes("Hub")}
                   onChange={(e) => updateItemTypes("Hub", e.target.checked ? "add" : "remove")}
                 />
                 <Form.Check
@@ -131,7 +131,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                   label="Ring"
                   name="itemTypes"
                   type="checkbox"
-                  checked={ruleDetails.itemTypes.includes("Ring")}
+                  checked={ruleDetails.itemTypes?.includes("Ring")}
                   onChange={(e) => updateItemTypes("Ring", e.target.checked ? "add" : "remove")}
                 />
                 <Form.Check
@@ -139,7 +139,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                   label="Video Channel"
                   name="itemTypes"
                   type="checkbox"
-                  checked={ruleDetails.itemTypes.includes("Video Channel")}
+                  checked={ruleDetails.itemTypes?.includes("Video Channel")}
                   onChange={(e) => updateItemTypes("Video Channel", e.target.checked ? "add" : "remove")}
                 />
                 <Form.Check
@@ -147,7 +147,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                   label="Cell Site"
                   name="itemTypes"
                   type="checkbox"
-                  checked={ruleDetails.itemTypes.includes("Cell Site")}
+                  checked={ruleDetails.itemTypes?.includes("Cell Site")}
                   onChange={(e) => updateItemTypes("Cell Site", e.target.checked ? "add" : "remove")}
                 />
               </Form.Group>
@@ -160,7 +160,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                   label="Maintenance"
                   name="conflictType"
                   type="checkbox"
-                  checked={ruleDetails.conflictTypes.includes("Maintenance")}
+                  checked={ruleDetails.conflictTypes?.includes("Maintenance")}
                   onChange={(e) => updateConflictTypes("Maintenance", e.target.checked ? "add" : "remove")}
                 />
                 <Form.Check
@@ -168,7 +168,7 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                   label="Outage"
                   name="conflictType"
                   type="checkbox"
-                  checked={ruleDetails.conflictTypes.includes("Outage")}
+                  checked={ruleDetails.conflictTypes?.includes("Outage")}
                   onChange={(e) => updateConflictTypes("Outage", e.target.checked ? "add" : "remove")}
                 />
               </Form.Group>

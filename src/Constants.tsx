@@ -22,26 +22,27 @@ export const attributeTypes: AttributeType[] = [
 ];
 
 export const attributes: Attribute[] = [
-  { name: "Circuit name", attributeType: "Circuit", attributeCategory: "Item", dataType: "string" },
-  { name: "Device name", attributeType: "Device", attributeCategory: "Item", dataType: "string" },
-  { name: "Adjacent devices", attributeType: "Device", attributeCategory: "Item", dataType: "list<string>" },
-  { name: "Circuit name", attributeType: "Circuit", attributeCategory: "Impact", dataType: "string" },
-  { name: "Device Impacts count", attributeType: "Device", attributeCategory: "Impact", dataType: "number" },
+  { id: uuid(), name: "Circuit name", type: "Circuit", category: "Item", dataType: "string" },
+  { id: uuid(), name: "Device name", type: "Device", category: "Item", dataType: "string" },
+  { id: uuid(), name: "Adjacent devices", type: "Device", category: "Item", dataType: "list<string>" },
+  { id: uuid(), name: "Circuit name", type: "Circuit", category: "Impact", dataType: "string" },
+  { id: uuid(), name: "Device Impacts count", type: "Device", category: "Impact", dataType: "number" },
 ];
 
 export const functions: Function[] = [
-  { name: "Suffix", parameters: "", inputDataType: "string", outputDataType: "string" },
-  { name: "Sub-string", parameters: "", inputDataType: "string", outputDataType: "string" },
-  { name: "Split", parameters: "", inputDataType: "string", outputDataType: "list<string>" },
-  { name: "Count", parameters: "", inputDataType: "list<string>", outputDataType: "number" },
-  { name: "Add", parameters: "", inputDataType: "number", outputDataType: "number" },
-  { name: "Multiply", parameters: "", inputDataType: "number", outputDataType: "number" },
+  { id: uuid(), name: "Suffix", parameters: null, inputDataType: "string", outputDataType: "string" },
+  { id: uuid(), name: "Sub-string", parameters: null, inputDataType: "string", outputDataType: "string" },
+  { id: uuid(), name: "Split", parameters: null, inputDataType: "string", outputDataType: "list<string>" },
+  { id: uuid(), name: "Count", parameters: null, inputDataType: "list<string>", outputDataType: "number" },
+  { id: uuid(), name: "Add", parameters: null, inputDataType: "number", outputDataType: "number" },
+  { id: uuid(), name: "Multiply", parameters: null, inputDataType: "number", outputDataType: "number" },
 ];
 
 export const validators: Validator[] = [
-  { name: "Equals", operandsDataTypes: [["string", "string"]] },
-  { name: "Not equals", operandsDataTypes: [["string", "string"]] },
-  { name: "Contains", operandsDataTypes: [["string", "string"], ["list<string>", "string"]] },
+  { id: uuid(), name: "Equals", operandsDataTypes: [["string", "string"]] },
+  { id: uuid(), name: "Not equals", operandsDataTypes: [["string", "string"]] },
+  { id: uuid(), name: "Contains", operandsDataTypes: [["string", "string"], ["list<string>", "string"]] },
+  { id: uuid(), name: "Greater than", operandsDataTypes: [["number", "number"]] },
 ];
 
 export const operators: Operator[] = [
