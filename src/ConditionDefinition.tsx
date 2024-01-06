@@ -39,12 +39,12 @@ function ConditionDefinition({
       name: null,
       operandsDataTypes: null,
     };
-    if (whichItem === "This Item") {
+    if (whichItem === "Latest Request") {
       let newFunctions = condition.thisItemFunctions ? [...condition.thisItemFunctions] : [];
       newFunctions.push(newFunction);
       updateCondition(whichItem, condition.thisItemAttribute, newFunctions, newValidator, null);
     }
-    else if (whichItem === "Existing Item") {
+    else if (whichItem === "Existing Request") {
       let newFunctions = condition.existingItemFunctions ? [...condition.existingItemFunctions] : [];
       newFunctions.push(newFunction);
       updateCondition(whichItem, condition.existingItemAttribute, newFunctions, newValidator, null);
@@ -57,12 +57,12 @@ function ConditionDefinition({
       name: null,
       operandsDataTypes: null,
     };
-    if (whichItem === "This Item" && condition.thisItemFunctions) {
+    if (whichItem === "Latest Request" && condition.thisItemFunctions) {
       let newFunctions = [...condition.thisItemFunctions];
       newFunctions.splice(index, 1);
       updateCondition(whichItem, condition.thisItemAttribute, newFunctions, newValidator, null);
     }
-    else if (whichItem === "Existing Item" && condition.existingItemFunctions) {
+    else if (whichItem === "Existing Request" && condition.existingItemFunctions) {
       let newFunctions = [...condition.existingItemFunctions];
       newFunctions.splice(index, 1);
       updateCondition(whichItem, condition.existingItemAttribute, newFunctions, newValidator, null);
@@ -89,13 +89,13 @@ function ConditionDefinition({
       <Card.Body className="d-flex flex-row align-items-center">
         <div className="d-flex flex-column gap-1">
           {[{
-            whichItem: "This Item",
+            whichItem: "Latest Request",
             itemIncluded: thisItemIncluded,
             attribute: condition.thisItemAttribute,
             functions: condition.thisItemFunctions,
           },
           {
-            whichItem: "Existing Item",
+            whichItem: "Existing Request",
             itemIncluded: existingItemIncluded,
             attribute: condition.existingItemAttribute,
             functions: condition.existingItemFunctions,
@@ -106,12 +106,12 @@ function ConditionDefinition({
                   label={objForItem.whichItem}
                   name="itemIncluded"
                   type="checkbox"
-                  checked={objForItem.whichItem === "This Item" ? thisItemIncluded : existingItemIncluded}
+                  checked={objForItem.whichItem === "Latest Request" ? thisItemIncluded : existingItemIncluded}
                   onChange={(e) => {
-                    if (objForItem.whichItem === "This Item") {
+                    if (objForItem.whichItem === "Latest Request") {
                       setThisItemIncluded(e.target.checked);
                     }
-                    else if (objForItem.whichItem === "Existing Item") {
+                    else if (objForItem.whichItem === "Existing Request") {
                       setExistingItemIncluded(e.target.checked);
                     }
                     let newValidator: Validator = {
@@ -137,10 +137,10 @@ function ConditionDefinition({
 
               {objForItem.itemIncluded && (
                 <>
-                  <Card className="p-3 d-flex flex-row align-items-center gap-3">
-                    <div className="d-flex flex-column">
-                      <Form.Group className="mb-3" controlId="formAttributeCategory">
-                        <Form.Label>Attribute category</Form.Label>
+                  <Card className="p-3 d-flex flex-row align-items-center gap-3" style={{ minWidth: "200px"}}>
+                    <div className="w-100 d-flex flex-column">
+                      <Form.Group className="mb-3" controlId="formCategory">
+                        <Form.Label>Category</Form.Label>
                         <Form.Select
                           size="sm"
                           value={objForItem.attribute?.category ?? "-1"}
@@ -162,15 +162,15 @@ function ConditionDefinition({
                               updateCondition(objForItem.whichItem, newAttribute, null, newValidator, null);
                             }
                           }}
-                          aria-label="Select attribute category">
-                          <option value="-1">Select attribute category</option>
+                          aria-label="Select category">
+                          <option value="-1">Select category</option>
                           {attributeCategories.map((attributeCategory, index) => (
                             <option key={index} value={attributeCategory}>{attributeCategory}</option>
                           ))}
                         </Form.Select>
                       </Form.Group>
-                      <Form.Group className="mb-3" controlId="formAttributeType">
-                        <Form.Label>Attribute type</Form.Label>
+                      <Form.Group className="mb-3" controlId="formType">
+                        <Form.Label>Type</Form.Label>
                         <Form.Select
                           size="sm"
                           value={objForItem.attribute?.type ?? "-1"}
@@ -191,16 +191,16 @@ function ConditionDefinition({
                               updateCondition(objForItem.whichItem, newAttribute, null, newValidator, null);
                             }
                           }}
-                          disabled={!objForItem.attribute?.category || objForItem.attribute?.category === "-1"}
-                          aria-label="Select attribute type">
-                          <option value="-1">Select attribute type</option>
+                          disabled={!objForItem.attribute?.category || objForItem.attribute?.category === "-1" || objForItem.attribute?.category === "Request"}
+                          aria-label="Select type">
+                          <option value="-1">Select type</option>
                           {attributeTypes.filter(attributeType => applicableItemTypes?.includes(attributeType.name) && attributeType.category === objForItem.attribute?.category).map((attributeType, index) => (
                             <option key={index} value={attributeType.name}>{attributeType.name}</option>
                           ))}
                         </Form.Select>
                       </Form.Group>
-                      <Form.Group className="mb-3" controlId="formAttributeName">
-                        <Form.Label>Attribute name</Form.Label>
+                      <Form.Group className="mb-3" controlId="formAttribute">
+                        <Form.Label>Attribute</Form.Label>
                         <Form.Select
                           size="sm"
                           value={objForItem.attribute?.id ?? "-1"}
@@ -232,10 +232,10 @@ function ConditionDefinition({
                               updateCondition(objForItem.whichItem, newAttribute, null, newValidator, null);
                             }
                           }}
-                          disabled={(!objForItem.attribute?.category || objForItem.attribute.category === "-1") || (!objForItem.attribute?.type || objForItem.attribute.type === "-1")}
+                          disabled={(!objForItem.attribute?.category || objForItem.attribute.category === "-1") || ((!objForItem.attribute?.type || objForItem.attribute.type === "-1") && objForItem.attribute?.category !== "Request")}
                           aria-label="Select attribute name">
-                          <option value="-1">Select attribute name</option>
-                          {attributes.filter(attribute => attribute.category === objForItem.attribute?.category && attribute.type === objForItem.attribute?.type).map((attribute) => (
+                          <option value="-1">Select attribute</option>
+                          {attributes.filter(attribute => attribute.category === objForItem.attribute?.category && (objForItem.attribute?.category === "Request" || attribute.type === objForItem.attribute?.type)).map((attribute) => (
                             <option key={attribute.id} value={attribute.id}>{attribute.name}</option>
                           ))}
                         </Form.Select>

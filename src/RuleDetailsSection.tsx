@@ -2,13 +2,13 @@ import Accordion from "react-bootstrap/Accordion";
 import Form from "react-bootstrap/Form";
 import { RuleDetails } from "./Types";
 
-function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDetectConflictsWithinSameRequest, updateItemTypes, updateConflictTypes } : {
+function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDetectConflictsWithinSameRequest, updateItemTypes, updateConflictCategories } : {
     ruleDetails: RuleDetails,
     updateField: (field: string, value: string) => void,
     updateStatus: (status: string) => void,
     updateDetectConflictsWithinSameRequest: (value: boolean) => void,
     updateItemTypes: (itemType: string, updateAction: string) => void,
-    updateConflictTypes: (conflictType: string, updateAction: string) => void,
+    updateConflictCategories: (conflictType: string, updateAction: string) => void,
   }) {
   return (
     <>
@@ -152,24 +152,24 @@ function RuleDetailsSection({ ruleDetails, updateField, updateStatus, updateDete
                 />
               </Form.Group>
 
-              <Form.Group className="mb-3" controlId="formApplicableConflictTypes">
-                <Form.Label>Applicable conflict types</Form.Label>
+              <Form.Group className="mb-3" controlId="formApplicableConflictCategories">
+                <Form.Label>Applicable conflict categories</Form.Label>
                 <br />
                 <Form.Check
                   inline
                   label="Maintenance"
-                  name="conflictType"
+                  name="conflictCategory"
                   type="checkbox"
-                  checked={ruleDetails.conflictTypes?.includes("Maintenance")}
-                  onChange={(e) => updateConflictTypes("Maintenance", e.target.checked ? "add" : "remove")}
+                  checked={ruleDetails.conflictCategories?.includes("Maintenance")}
+                  onChange={(e) => updateConflictCategories("Maintenance", e.target.checked ? "add" : "remove")}
                 />
                 <Form.Check
                   inline
                   label="Outage"
-                  name="conflictType"
+                  name="conflictCategory"
                   type="checkbox"
-                  checked={ruleDetails.conflictTypes?.includes("Outage")}
-                  onChange={(e) => updateConflictTypes("Outage", e.target.checked ? "add" : "remove")}
+                  checked={ruleDetails.conflictCategories?.includes("Outage")}
+                  onChange={(e) => updateConflictCategories("Outage", e.target.checked ? "add" : "remove")}
                 />
               </Form.Group>
             </Form>

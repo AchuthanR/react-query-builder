@@ -200,7 +200,7 @@ export default function Evaluate({
           {evaluator.conditionalSubNodes && (
             <div className="d-flex flex-row align-items-center gap-2">
               <p className="m-0" style={{ width: "100px" }}>
-                is satisfied, then
+                then
               </p>
               <Evaluate
                 conditions={conditions}
@@ -217,7 +217,7 @@ export default function Evaluate({
           {evaluator.subNodes && (
             <div className="d-flex flex-row align-items-center gap-2">
               <p className="m-0" style={{ width: "100px" }}>
-                is not satisfied, then
+                else
               </p>
               <Evaluate
                 conditions={conditions}

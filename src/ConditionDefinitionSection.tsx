@@ -45,7 +45,7 @@ function ConditionDefinitionSection({ applicableItemTypes, addCondition }
   }
 
   const updateCondition = (whichItem: string, newAttribute: Attribute | null, newFunctions: Function[] | null, newValidator: Validator, newValidationInput: string | null) => {
-    if (whichItem === "This Item") {
+    if (whichItem === "Latest Request") {
       let newCondition = { ...condition };
       newCondition.thisItemAttribute = newAttribute;
       newCondition.thisItemFunctions = newFunctions;
@@ -53,7 +53,7 @@ function ConditionDefinitionSection({ applicableItemTypes, addCondition }
       newCondition.validationInput = newValidationInput;
       setCondition(newCondition);
     }
-    else if (whichItem === "Existing Item") {
+    else if (whichItem === "Existing Request") {
       let newCondition = { ...condition };
       newCondition.existingItemAttribute = newAttribute;
       newCondition.existingItemFunctions = newFunctions;

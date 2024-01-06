@@ -8,7 +8,7 @@ export type RuleDetails = {
   status: string | null;
   detectConflictsWithinSameRequest: boolean | null;
   itemTypes: string[] | null;
-  conflictTypes: string[] | null;
+  conflictCategories: string[] | null;
 };
 
 export type AttributeType = {

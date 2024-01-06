@@ -16,7 +16,7 @@ function App() {
     status: null,
     detectConflictsWithinSameRequest: null,
     itemTypes: ["Circuit", "Device"],
-    conflictTypes: null,
+    conflictCategories: null,
   });
 
   const [conditions, setConditions] = useState<Condition1[]>([
@@ -82,21 +82,21 @@ function App() {
     }
   };
 
-  const updateConflictTypes = (conflictType: string, updateAction: string) => {
+  const updateConflictCategories = (conflictType: string, updateAction: string) => {
     if (updateAction === "add") {
       let newRuleDetails = { ...ruleDetails };
-      if (newRuleDetails.conflictTypes) {
-        newRuleDetails.conflictTypes.push(conflictType);
+      if (newRuleDetails.conflictCategories) {
+        newRuleDetails.conflictCategories.push(conflictType);
       }
       else {
-        newRuleDetails.conflictTypes = [conflictType];
+        newRuleDetails.conflictCategories = [conflictType];
       }
       setRuleDetails(newRuleDetails);
     }
     else if (updateAction === "remove") {
       let newRuleDetails = { ...ruleDetails };
-      if (newRuleDetails.conflictTypes) {
-        newRuleDetails.conflictTypes = newRuleDetails.conflictTypes.filter(type => type !== conflictType);
+      if (newRuleDetails.conflictCategories) {
+        newRuleDetails.conflictCategories = newRuleDetails.conflictCategories.filter(type => type !== conflictType);
         setRuleDetails(newRuleDetails);
       }
     }
@@ -114,7 +114,7 @@ function App() {
         updateStatus={updateStatus}
         updateDetectConflictsWithinSameRequest={updateDetectConflictsWithinSameRequest}
         updateItemTypes={updateItemTypes}
-        updateConflictTypes={updateConflictTypes} />
+        updateConflictCategories={updateConflictCategories} />
       
       <ConditionDefinitionSection
         applicableItemTypes={ruleDetails.itemTypes}

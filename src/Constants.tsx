@@ -22,6 +22,8 @@ export const attributeTypes: AttributeType[] = [
 ];
 
 export const attributes: Attribute[] = [
+  { id: uuid(), name: "Location name", type: null, category: "Request", dataType: "string" },
+  { id: uuid(), name: "Clli", type: null, category: "Request", dataType: "string" },
   { id: uuid(), name: "Circuit name", type: "Circuit", category: "Item", dataType: "string" },
   { id: uuid(), name: "Device name", type: "Device", category: "Item", dataType: "string" },
   { id: uuid(), name: "Adjacent devices", type: "Device", category: "Item", dataType: "list<string>" },
@@ -46,7 +48,7 @@ export const validators: Validator[] = [
 ];
 
 export const operators: Operator[] = [
-  { id: uuid(), value: "AND", name: "AND - All conditions directly under this group should be satisfied" },
-  { id: uuid(), value: "OR", name: "OR - At least one condition directly under this group should be satisified" },
-  { id: uuid(), value: "IF", name: "IF - Choose subsequent condition to evaluate based on the outcome of a condition" },
+  { id: uuid(), value: "AND", name: "AND" },
+  { id: uuid(), value: "OR", name: "OR" },
+  { id: uuid(), value: "IF", name: "IF" },
 ];
